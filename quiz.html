@@ -1,0 +1,518 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>소프트웨어와 생활 단원평가 (Ⅰ·Ⅲ단원)</title>
+<style>
+  :root{
+    --bg:#0b1220; --card:#151e31; --card2:#1f2b44; --accent:#4cc2ff; --accent2:#34d17b;
+    --danger:#ff7b7b; --text:#eef2f8; --text-dim:#9aa8bf; --border:#2c3a57;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    min-height:100vh; display:flex; justify-content:center; padding:16px;
+  }
+  .app{width:100%; max-width:560px;}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px 18px; margin-bottom:14px;}
+  h1{font-size:1.35rem;margin:0 0 8px;}
+  p{line-height:1.55;color:var(--text-dim);font-size:0.94rem;margin:0 0 10px;}
+  .hidden{display:none !important;}
+  .btn{
+    display:block; width:100%; padding:14px 16px; min-height:48px; border-radius:12px; border:none;
+    font-size:1rem; font-weight:600; cursor:pointer; margin-top:10px; text-align:center;
+  }
+  .btn-primary{background:var(--accent);color:#03222f;}
+  .btn-primary:disabled{background:#2c3a57;color:#66748f;cursor:not-allowed;}
+  .btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border);}
+  .btn-green{background:var(--accent2);color:#052812;}
+  .progress-label{font-size:0.85rem;color:var(--text-dim);margin-bottom:8px;}
+  .progress-wrap{background:var(--card2);border-radius:999px;height:10px;overflow:hidden;margin-bottom:14px;}
+  .progress-bar{background:var(--accent);height:100%;width:0%;transition:width .25s ease;}
+  .standard-tag{
+    display:inline-block;font-size:0.75rem;color:#93c5fd;background:#0d2740;border:1px solid #1d4b6f;
+    border-radius:8px;padding:3px 8px;margin-bottom:10px;
+  }
+  .question-text{font-size:1.04rem;font-weight:600;line-height:1.55;margin-bottom:16px;white-space:pre-wrap;
+    overflow-wrap:break-word;word-break:break-word;}
+  .choice{
+    display:flex; align-items:flex-start; gap:10px; width:100%; text-align:left;
+    background:var(--card2); border:2px solid var(--border); color:var(--text); border-radius:12px;
+    padding:12px 14px; margin-bottom:10px; font-size:0.94rem; line-height:1.45; cursor:pointer;
+  }
+  .choice .num{flex:0 0 auto;font-weight:700;color:var(--accent);}
+  .choice.selected{border-color:var(--accent);background:#0d3855;}
+  .score-box{text-align:center;padding:10px 0 4px;}
+  .score-num{font-size:2.4rem;font-weight:800;color:var(--accent);}
+  .score-sub{color:var(--text-dim);font-size:0.9rem;margin-top:4px;}
+  .result-item{border-top:1px solid var(--border);padding:14px 0;}
+  .result-item:first-child{border-top:none;padding-top:0;}
+  .result-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px;}
+  .result-num{font-weight:700;font-size:0.95rem;}
+  .badge{font-size:0.77rem;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap;}
+  .badge-correct{background:#123f24;color:#4ade80;}
+  .badge-wrong{background:#3f1414;color:#ff8f8f;}
+  .result-q{font-size:0.92rem;font-weight:600;margin-bottom:6px;white-space:pre-wrap;overflow-wrap:break-word;word-break:break-word;}
+  .result-your{font-size:0.85rem;color:var(--text-dim);margin-bottom:2px;}
+  .result-feedback{font-size:0.88rem;font-weight:600;}
+  .feedback-correct{color:#4ade80;}
+  .feedback-wrong{color:#ff8f8f;}
+  #capture-area{background:var(--bg);padding:4px;}
+  .email-note{font-size:0.8rem;color:var(--text-dim);margin-top:8px;line-height:1.5;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:0.88rem;font-weight:600;color:var(--text-dim);margin-bottom:6px;}
+  .field input,.field select{
+    width:100%; padding:12px 14px; min-height:48px; border-radius:12px; border:1px solid var(--border);
+    background:var(--card2); color:var(--text); font-size:1rem; font-family:inherit; appearance:none; -webkit-appearance:none;
+  }
+  .field select{
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa8bf' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center; padding-right:38px;
+  }
+  .field input:focus,.field select:focus{outline:none;border-color:var(--accent);}
+  .start-hint{font-size:0.83rem;color:var(--text-dim);margin-top:10px;line-height:1.5;}
+  .start-hint.hint-error{color:var(--danger);font-weight:700;}
+  .info-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;
+    border-bottom:1px solid var(--border);font-size:0.9rem;}
+  .info-row:last-child{border-bottom:none;padding-bottom:0;}
+  .info-row:first-child{padding-top:0;}
+  .info-label{flex:0 0 auto;color:var(--text-dim);font-weight:600;}
+  .info-value{color:var(--text);font-weight:700;text-align:right;word-break:break-all;}
+  .info-title{font-size:0.95rem;font-weight:700;margin:0 0 10px;color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- 시작 화면 -->
+  <div id="screen-start" class="card">
+    <h1>소프트웨어와 생활 단원평가</h1>
+    <p>고등학교 「소프트웨어와 생활」 Ⅰ단원(소프트웨어로 변화하는 세상)과 Ⅲ단원(현상을 탐구하는 데이터) 범위의 5지선다 30문항입니다. 전 문항 풀이 후 채점 결과와 성취기준 정보가 표시됩니다.</p>
+    <p>정답 문항은 정답이 공개되고, 오답 문항은 정답이 공개되지 않습니다. 문항 순서와 선택지 순서는 매 실행마다 무작위로 바뀝니다.</p>
+
+    <div class="field">
+      <label for="select-number">번호 선택</label>
+      <select id="select-number">
+        <option value="">번호를 선택하세요</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="input-name">이름</label>
+      <input type="text" id="input-name" placeholder="이름을 입력하세요" maxlength="30" autocomplete="off">
+    </div>
+
+    <button class="btn btn-primary" id="btn-start" disabled>평가 시작하기</button>
+    <div class="start-hint" id="start-hint">번호와 이름을 모두 입력해야 평가를 시작할 수 있습니다.</div>
+  </div>
+
+  <!-- 평가 화면 -->
+  <div id="screen-quiz" class="card hidden">
+    <div class="progress-label" id="progress-label">1 / 30</div>
+    <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+    <div class="standard-tag" id="quiz-standard"></div>
+    <div class="question-text" id="question-text"></div>
+    <div id="choices-wrap"></div>
+    <button class="btn btn-primary" id="btn-next" disabled>다음</button>
+  </div>
+
+  <!-- 결과 화면 -->
+  <div id="screen-result" class="hidden">
+    <div id="capture-area">
+      <div class="card">
+        <div class="info-title">응시자 정보</div>
+        <div class="info-row"><span class="info-label">번호</span><span class="info-value" id="info-number">-</span></div>
+        <div class="info-row"><span class="info-label">이름</span><span class="info-value" id="info-name">-</span></div>
+        <div class="info-row"><span class="info-label">응시 일시</span><span class="info-value" id="info-time">-</span></div>
+        <div class="info-row"><span class="info-label">디바이스 ID</span><span class="info-value" id="info-device">-</span></div>
+        <div class="info-row"><span class="info-label">브라우저/OS</span><span class="info-value" id="info-env">-</span></div>
+        <div class="info-row"><span class="info-label">화면 해상도</span><span class="info-value" id="info-screen">-</span></div>
+      </div>
+      <div class="card">
+        <div class="score-box">
+          <div class="score-num" id="score-num">0 / 30</div>
+          <div class="score-sub" id="score-sub">정답률 0%</div>
+        </div>
+      </div>
+      <div class="card" id="result-list"></div>
+    </div>
+    <div class="card">
+      <button class="btn btn-green" id="btn-save-image">결과 이미지로 저장</button>
+      <button class="btn btn-secondary" id="btn-send-email">이메일로 보내기 (me@compiler.kr)</button>
+      <div class="email-note">※ [결과 이미지로 저장]을 클릭해 이미지를 저장한 뒤, 클래스룸에 업로드하세요!</div>
+      <button class="btn btn-secondary" id="btn-restart">다시 풀기</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- 문제 은행 (새로 출제된 문항) -->
+<script src="questions1.js"></script>
+<script src="questions2.js"></script>
+<script src="questions3.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var STANDARDS = {
+    1: "[Ⅰ-01] 소프트웨어의 개념과 종류, 그리고 사례를 설명할 수 있는가",
+    2: "[Ⅰ-01] 소프트웨어의 특징(자동화·연결화·지능화)을 사례와 연결 지을 수 있는가",
+    3: "[Ⅰ-02] 실생활 문제를 소프트웨어 관점에서 해결한 사례를 분석할 수 있는가",
+    4: "[Ⅰ-02] 소프트웨어 도입의 장점과 미래 사회(초연결·초지능·초융합) 변화를 예측할 수 있는가",
+    5: "[Ⅰ-03] 여러 분야에서의 소프트웨어 융합 사례를 비교·분석할 수 있는가",
+    6: "[Ⅲ-01] 데이터의 가치와 데이터 분석 과정을 이해하는가",
+    7: "[Ⅲ-02~04] 데이터 유형을 구분하고 수집·전처리 방법을 활용할 수 있는가",
+    8: "[Ⅲ-04] 데이터를 시각화하고 그래프를 해석할 수 있는가",
+    9: "[Ⅲ-05] 데이터 활용에서의 개인 정보 보호와 윤리적 문제를 판단할 수 있는가"
+  };
+
+  var NUM = ["①","②","③","④","⑤"];
+  var CURRENT_MAX = 30;
+  var current = 0;
+  var activeQuestions = [];
+  var userAnswers = [];
+  var studentNumber = '';
+  var studentName = '';
+
+  var QUESTIONS = [];
+  [window.QUIZ_QUESTIONS, window.QUIZ_QUESTIONS2, window.QUIZ_QUESTIONS3].forEach(function(arr){
+    if (Array.isArray(arr)) QUESTIONS = QUESTIONS.concat(arr);
+  });
+
+  var screenStart = document.getElementById('screen-start');
+  var screenQuiz = document.getElementById('screen-quiz');
+  var screenResult = document.getElementById('screen-result');
+  var progressLabel = document.getElementById('progress-label');
+  var progressBar = document.getElementById('progress-bar');
+  var standardTag = document.getElementById('quiz-standard');
+  var questionText = document.getElementById('question-text');
+  var choicesWrap = document.getElementById('choices-wrap');
+  var btnNext = document.getElementById('btn-next');
+  var selectNumber = document.getElementById('select-number');
+  var inputName = document.getElementById('input-name');
+  var btnStart = document.getElementById('btn-start');
+  var startHint = document.getElementById('start-hint');
+
+  for (var n = 1; n <= 32; n++){
+    var opt = document.createElement('option');
+    opt.value = String(n);
+    opt.textContent = n + '번';
+    selectNumber.appendChild(opt);
+  }
+
+  var DEVICE_ID = (function(){
+    var KEY = 'swquiz_device_id';
+    try {
+      var id = localStorage.getItem(KEY);
+      if (!id){
+        id = 'D-' + Array.from(crypto.getRandomValues(new Uint32Array(3)))
+          .map(function(x){ return x.toString(36).toUpperCase(); }).join('-');
+        localStorage.setItem(KEY, id);
+      }
+      return id;
+    } catch(e){ return '(저장공간 사용 불가)'; }
+  })();
+
+  var DEVICE_ENV = (function(){
+    var ua = navigator.userAgent;
+    var browser = '기타';
+    if (/OPR\//.test(ua)) browser = 'Opera';
+    else if (/Edg\//.test(ua)) browser = 'Edge';
+    else if (/Firefox\//.test(ua)) browser = 'Firefox';
+    else if (/Chrome\//.test(ua)) browser = 'Chrome';
+    else if (/Safari\//.test(ua)) browser = 'Safari';
+    var ver = ua.match(/(?:Edg|OPR|Chrome|Firefox|Version)\/(\d+)/);
+    var os = '기타';
+    if (/Windows/.test(ua)) os = 'Windows';
+    else if (/Macintosh|Mac OS X/.test(ua)) os = 'macOS';
+    else if (/(iPhone|iPad|iPod)/.test(ua)) os = 'iOS';
+    else if (/Android/.test(ua)) os = 'Android';
+    else if (/Linux/.test(ua)) os = 'Linux';
+    return browser + (ver ? ' ' + ver[1] : '') + ' / ' + os;
+  })();
+
+  var DEVICE_SCREEN = screen.width + 'x' + screen.height + ' (' + (window.devicePixelRatio || 1) + 'x)';
+
+  var LOCK_KEY = 'swquiz_device_lock';
+  var LOCK_DURATION_MS = 10 * 60 * 1000;
+
+  function readLock(){
+    try {
+      var raw = localStorage.getItem(LOCK_KEY);
+      if (!raw) return null;
+      var lock = JSON.parse(raw);
+      if (!lock || !lock.time || (Date.now() - lock.time) >= LOCK_DURATION_MS){
+        localStorage.removeItem(LOCK_KEY);
+        return null;
+      }
+      return lock;
+    } catch(e){ return null; }
+  }
+
+  function writeLock(number, name){
+    try {
+      localStorage.setItem(LOCK_KEY, JSON.stringify({ number: String(number), name: String(name), time: Date.now() }));
+    } catch(e){}
+  }
+
+  function formatRemainingTime(lockTime){
+    var remainingMs = Math.max(0, LOCK_DURATION_MS - (Date.now() - lockTime));
+    var totalSec = Math.ceil(remainingMs / 1000);
+    var min = Math.floor(totalSec / 60);
+    var sec = totalSec % 60;
+    return min + '분 ' + (sec < 10 ? '0' + sec : sec) + '초';
+  }
+
+  function updateStartState(){
+    var selectedNum = selectNumber.value;
+    var enteredName = inputName.value.trim();
+    var lock = readLock();
+
+    if (selectedNum !== '' && lock && String(selectedNum) !== String(lock.number)){
+      btnStart.disabled = true;
+      startHint.classList.add('hint-error');
+      startHint.textContent = '이 기기에서 최근 ' + lock.number + '번(' + lock.name + ') 학생이 응시했습니다. '
+        + '대리 응시 방지를 위해 다른 번호로는 ' + formatRemainingTime(lock.time) + ' 뒤에 응시할 수 있습니다. '
+        + '(' + lock.number + '번 학생의 재응시는 즉시 가능합니다.)';
+      return false;
+    }
+
+    var ok = selectedNum !== '' && enteredName !== '';
+    btnStart.disabled = !ok;
+    startHint.classList.remove('hint-error');
+    if (ok){
+      startHint.textContent = (lock && String(selectedNum) === String(lock.number))
+        ? lock.number + '번 동일 번호 재응시입니다. 바로 시작할 수 있습니다.'
+        : '시작할 준비가 되었습니다. 버튼을 눌러주세요.';
+    } else {
+      startHint.textContent = '번호와 이름을 모두 입력해야 평가를 시작할 수 있습니다.';
+    }
+    return ok;
+  }
+
+  // 1초마다 잠금 만료 여부와 남은 대기 시간을 실시간 갱신
+  setInterval(function(){
+    if (!screenStart.classList.contains('hidden')) updateStartState();
+  }, 1000);
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  // 문항 순서와 각 문항의 5개 선택지 순서를 매 실행마다 재구성
+  function buildActiveQuestions(){
+    return shuffle(QUESTIONS).map(function(q){
+      var indices = shuffle([0,1,2,3,4]);
+      return {
+        standard: q.standard,
+        text: q.text,
+        choices: indices.map(function(i){ return q.choices[i]; }),
+        answer: indices.indexOf(q.answer)
+      };
+    });
+  }
+
+  btnStart.addEventListener('click', function(){
+    if (!updateStartState()) return;
+    studentNumber = selectNumber.value;
+    studentName = inputName.value.trim();
+    writeLock(studentNumber, studentName);
+    activeQuestions = buildActiveQuestions();
+    userAnswers = new Array(activeQuestions.length).fill(null);
+    current = 0;
+    screenStart.classList.add('hidden');
+    screenQuiz.classList.remove('hidden');
+    renderQuestion();
+  });
+
+  function renderQuestion(){
+    var q = activeQuestions[current];
+    var pendingChoice = userAnswers[current];
+    progressLabel.textContent = (current + 1) + ' / ' + activeQuestions.length;
+    progressBar.style.width = Math.round((current / activeQuestions.length) * 100) + '%';
+    standardTag.textContent = '성취기준 ' + q.standard + ': ' + STANDARDS[q.standard];
+    questionText.textContent = q.text;
+    choicesWrap.innerHTML = '';
+    q.choices.forEach(function(choiceText, idx){
+      var div = document.createElement('button');
+      div.type = 'button';
+      div.className = 'choice' + (pendingChoice === idx ? ' selected' : '');
+      div.innerHTML = '<span class="num">' + NUM[idx] + '</span><span>' + escapeHtml(choiceText) + '</span>';
+      div.addEventListener('click', function(){
+        userAnswers[current] = idx;
+        Array.prototype.forEach.call(choicesWrap.children, function(c){ c.classList.remove('selected'); });
+        div.classList.add('selected');
+        btnNext.disabled = false;
+      });
+      choicesWrap.appendChild(div);
+    });
+    btnNext.disabled = (pendingChoice === null || pendingChoice === undefined);
+    btnNext.textContent = (current === activeQuestions.length - 1) ? '채점하기' : '다음';
+  }
+
+  btnNext.addEventListener('click', function(){
+    if (userAnswers[current] === null || userAnswers[current] === undefined) return;
+    if (current < activeQuestions.length - 1){
+      current++;
+      renderQuestion();
+    } else {
+      progressBar.style.width = '100%';
+      showResult();
+    }
+  });
+
+  function escapeHtml(str){
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function showResult(){
+    screenQuiz.classList.add('hidden');
+    screenResult.classList.remove('hidden');
+
+    document.getElementById('info-number').textContent = studentNumber ? studentNumber + '번' : '-';
+    document.getElementById('info-name').textContent = studentName || '-';
+    document.getElementById('info-time').textContent = new Date().toLocaleString('ko-KR', { hour12: false });
+    document.getElementById('info-device').textContent = DEVICE_ID;
+    document.getElementById('info-env').textContent = DEVICE_ENV;
+    document.getElementById('info-screen').textContent = DEVICE_SCREEN;
+    writeLock(studentNumber, studentName);
+
+    var score = 0;
+    activeQuestions.forEach(function(q, i){ if (userAnswers[i] === q.answer) score++; });
+
+    document.getElementById('score-num').textContent = score + ' / ' + activeQuestions.length;
+    document.getElementById('score-sub').textContent = '정답률 ' + Math.round((score / activeQuestions.length) * 100) + '%';
+
+    var list = document.getElementById('result-list');
+    list.innerHTML = '';
+    activeQuestions.forEach(function(q, i){
+      var correct = userAnswers[i] === q.answer;
+      var item = document.createElement('div');
+      item.className = 'result-item';
+
+      var head = document.createElement('div');
+      head.className = 'result-head';
+      head.innerHTML = '<span class="result-num">문항 ' + (i + 1) + '</span>' +
+        '<span class="badge ' + (correct ? 'badge-correct' : 'badge-wrong') + '">' + (correct ? '정답' : '오답') + '</span>';
+      item.appendChild(head);
+
+      var tag = document.createElement('div');
+      tag.className = 'standard-tag';
+      tag.textContent = '성취기준 ' + q.standard + ': ' + STANDARDS[q.standard];
+      item.appendChild(tag);
+
+      var qEl = document.createElement('div');
+      qEl.className = 'result-q';
+      qEl.textContent = (i + 1) + '. ' + q.text;
+      item.appendChild(qEl);
+
+      var yourEl = document.createElement('div');
+      yourEl.className = 'result-your';
+      var yourText = (userAnswers[i] === null || userAnswers[i] === undefined)
+        ? '선택하지 않음'
+        : (NUM[userAnswers[i]] + ' ' + q.choices[userAnswers[i]]);
+      yourEl.textContent = '선택한 답: ' + yourText;
+      item.appendChild(yourEl);
+
+      var fb = document.createElement('div');
+      if (correct){
+        fb.className = 'result-feedback feedback-correct';
+        fb.textContent = '정답입니다! 정답: ' + NUM[q.answer] + ' ' + q.choices[q.answer];
+      } else {
+        fb.className = 'result-feedback feedback-wrong';
+        fb.textContent = '오답입니다.';
+      }
+      item.appendChild(fb);
+
+      list.appendChild(item);
+    });
+  }
+
+  document.getElementById('btn-restart').addEventListener('click', function(){
+    screenResult.classList.add('hidden');
+    screenStart.classList.remove('hidden');
+    updateStartState();
+  });
+
+  function captureResult(callback){
+    if (typeof html2canvas === 'undefined'){
+      alert('이미지 캡처 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.');
+      return;
+    }
+    var target = document.getElementById('capture-area');
+    html2canvas(target, { backgroundColor: '#0b1220', scale: 2 }).then(function(canvas){
+      canvas.toBlob(function(blob){
+        callback(blob, canvas.toDataURL('image/png'));
+      }, 'image/png');
+    });
+  }
+
+  function resultFileName(){
+    var safeName = studentName.replace(/[\\\/:*?"<>|\s]/g, '_');
+    return '소프트웨어와생활_단원평가_' + studentNumber + '_' + safeName + '.png';
+  }
+
+  document.getElementById('btn-save-image').addEventListener('click', function(){
+    captureResult(function(blob, dataUrl){
+      var a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = resultFileName();
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+  });
+
+  document.getElementById('btn-send-email').addEventListener('click', function(){
+    var score = 0;
+    activeQuestions.forEach(function(q, i){ if (userAnswers[i] === q.answer) score++; });
+    var infoLine = '번호: ' + studentNumber + ' / 이름: ' + studentName
+      + '\n디바이스 ID: ' + DEVICE_ID + ' / ' + DEVICE_ENV + ' / ' + DEVICE_SCREEN;
+    var subject = encodeURIComponent('소프트웨어와 생활 단원평가 결과 (' + studentNumber + ' ' + studentName + ', ' + score + '/' + CURRENT_MAX + ')');
+    var body = encodeURIComponent(
+      '받는사람: me@compiler.kr\n\n' +
+      infoLine + '\n' +
+      '단원평가 결과: ' + score + ' / ' + activeQuestions.length + '점\n' +
+      '(이 메일에는 결과 이미지를 첨부해 주세요. 이미지는 자동으로 다운로드되었습니다.)'
+    );
+
+    captureResult(function(blob, dataUrl){
+      var fileName = resultFileName();
+      var file = new File([blob], fileName, { type: 'image/png' });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })){
+        navigator.share({
+          files: [file],
+          title: '소프트웨어와 생활 단원평가 결과',
+          text: '받는사람: me@compiler.kr\n' + infoLine + '\n결과: ' + score + ' / ' + activeQuestions.length + '점'
+        }).catch(function(){});
+      } else {
+        var a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.open('mailto:me@compiler.kr?subject=' + subject + '&body=' + body, '_blank');
+      }
+    });
+  });
+
+  // 문항 개수가 30개가 아니면 시작 화면에 알림 표시
+  if (QUESTIONS.length !== CURRENT_MAX){
+    startHint.textContent = '(경고) 불러온 문항이 ' + QUESTIONS.length + '개입니다. questions1~3.js를 확인하세요.';
+  }
+
+})();
+</script>
+</body>
+</html>
