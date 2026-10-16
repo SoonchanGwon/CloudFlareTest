@@ -6,8 +6,8 @@
 <title>소프트웨어와 생활 단원평가 (Ⅰ·Ⅲ단원)</title>
 <style>
   :root{
-    --bg:#0b1220; --card:#151e31; --card2:#1f2b44; --accent:#4cc2ff; --accent2:#34d17b;
-    --danger:#ff7b7b; --text:#eef2f8; --text-dim:#9aa8bf; --border:#2c3a57;
+    --bg:#f1f5fb; --card:#ffffff; --card2:#f3f6fb; --accent:#0e7dc2; --accent2:#18a558;
+    --danger:#dc4b4b; --text:#1d2733; --text-dim:#5a6a7e; --border:#dbe2ec;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -25,15 +25,15 @@
     display:block; width:100%; padding:14px 16px; min-height:48px; border-radius:12px; border:none;
     font-size:1rem; font-weight:600; cursor:pointer; margin-top:10px; text-align:center;
   }
-  .btn-primary{background:var(--accent);color:#03222f;}
-  .btn-primary:disabled{background:#2c3a57;color:#66748f;cursor:not-allowed;}
+  .btn-primary{background:var(--accent);color:#ffffff;}
+  .btn-primary:disabled{background:#c9d2de;color:#8b97a8;cursor:not-allowed;}
   .btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border);}
   .btn-green{background:var(--accent2);color:#052812;}
   .progress-label{font-size:0.85rem;color:var(--text-dim);margin-bottom:8px;}
   .progress-wrap{background:var(--card2);border-radius:999px;height:10px;overflow:hidden;margin-bottom:14px;}
   .progress-bar{background:var(--accent);height:100%;width:0%;transition:width .25s ease;}
   .standard-tag{
-    display:inline-block;font-size:0.75rem;color:#93c5fd;background:#0d2740;border:1px solid #1d4b6f;
+    display:inline-block;font-size:0.75rem;color:#0b639c;background:#e3f1fb;border:1px solid #bcdcf5;
     border-radius:8px;padding:3px 8px;margin-bottom:10px;
   }
   .question-text{font-size:1.04rem;font-weight:600;line-height:1.55;margin-bottom:16px;white-space:pre-wrap;
@@ -44,7 +44,7 @@
     padding:12px 14px; margin-bottom:10px; font-size:0.94rem; line-height:1.45; cursor:pointer;
   }
   .choice .num{flex:0 0 auto;font-weight:700;color:var(--accent);}
-  .choice.selected{border-color:var(--accent);background:#0d3855;}
+  .choice.selected{border-color:var(--accent);background:#e3f2fc;}
   .score-box{text-align:center;padding:10px 0 4px;}
   .score-num{font-size:2.4rem;font-weight:800;color:var(--accent);}
   .score-sub{color:var(--text-dim);font-size:0.9rem;margin-top:4px;}
@@ -53,13 +53,13 @@
   .result-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px;}
   .result-num{font-weight:700;font-size:0.95rem;}
   .badge{font-size:0.77rem;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap;}
-  .badge-correct{background:#123f24;color:#4ade80;}
-  .badge-wrong{background:#3f1414;color:#ff8f8f;}
+  .badge-correct{background:#e2f7ea;color:#15803d;}
+  .badge-wrong{background:#fde8e8;color:#c2352f;}
   .result-q{font-size:0.92rem;font-weight:600;margin-bottom:6px;white-space:pre-wrap;overflow-wrap:break-word;word-break:break-word;}
   .result-your{font-size:0.85rem;color:var(--text-dim);margin-bottom:2px;}
   .result-feedback{font-size:0.88rem;font-weight:600;}
-  .feedback-correct{color:#4ade80;}
-  .feedback-wrong{color:#ff8f8f;}
+  .feedback-correct{color:#15803d;}
+  .feedback-wrong{color:#c2352f;}
   #capture-area{background:var(--bg);padding:4px;}
   .email-note{font-size:0.8rem;color:var(--text-dim);margin-top:8px;line-height:1.5;}
   .field{margin-bottom:12px;}
@@ -69,7 +69,7 @@
     background:var(--card2); color:var(--text); font-size:1rem; font-family:inherit; appearance:none; -webkit-appearance:none;
   }
   .field select{
-    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa8bf' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6a7e' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat:no-repeat; background-position:right 14px center; padding-right:38px;
   }
   .field input:focus,.field select:focus{outline:none;border-color:var(--accent);}
@@ -449,7 +449,7 @@
       return;
     }
     var target = document.getElementById('capture-area');
-    html2canvas(target, { backgroundColor: '#0b1220', scale: 2 }).then(function(canvas){
+    html2canvas(target, { backgroundColor: '#f1f5fb', scale: 2 }).then(function(canvas){
       canvas.toBlob(function(blob){
         callback(blob, canvas.toDataURL('image/png'));
       }, 'image/png');
