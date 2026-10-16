@@ -1,0 +1,6 @@
+name = "cloudflaretest"
+compatibility_date = "2026-10-16"
+
+# 저장소 루트의 정적 파일(index.html, questions*.js)을 그대로 배포
+[assets]
+directory = "./"
